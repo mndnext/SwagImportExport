@@ -44,6 +44,16 @@ class ConfiguratorWriter
     private $sets;
 
     /**
+     * @var array
+     */
+    private $cleanedSets = [];
+
+    /**
+     * @var array
+     */
+    private $cleanedOptionRelation = [];
+
+    /**
      * @return ConfiguratorWriter
      */
     public static function createFromGlobalSingleton()
@@ -73,6 +83,25 @@ class ConfiguratorWriter
         $this->sets = $this->getSets();
         $this->db = $db;
         $this->configuratorValidator = $configuratorValidator;
+
+        // PATCH - remove all variant-relations at first call
+        // attention: import-file must include all variants!
+        $request = Shopware()->Front()->Request();
+        $session = Shopware()->Container()->get('backendsession');
+        if (!$request->getParam('batchSize')) {
+            $session->offsetSet('clearedSets', []);
+            $session->offsetSet('cleanedOptionRelation', []);
+        } else {
+            $this->cleanedSets = $session->offsetGet('clearedSets');
+            $this->cleanedOptionRelation = $session->offsetGet('cleanedOptionRelation');
+        }
+    }
+
+    public function __destruct()
+    {
+        $session = Shopware()->Container()->get('backendsession');
+        $session->offsetSet('clearedSets', $this->cleanedSets);
+        $session->offsetSet('cleanedOptionRelation', $this->cleanedOptionRelation);
     }
 
     /**
@@ -122,9 +151,33 @@ class ConfiguratorWriter
                 }
             }
 
+            // PATCH - remove all variant-relations at first call
+            // attention: import-file must include all variants!
+            if (!in_array($configuratorSetId, $this->cleanedSets)) {
+                $this->cleanedSets[] = $configuratorSetId;
+                $this->resetSetGroupAndOptionRelations($configuratorSetId);
+            }
+
             if ($articleWriterResult->getMainDetailId() != $articleWriterResult->getDetailId()) {
                 $this->updateArticleSetsRelation($articleWriterResult->getArticleId(), $configuratorSetId);
             }
+
+        }
+
+        // PATCH - remove all option-relations at first call
+        // attention: import-file must include all variants!
+        if (!in_array($articleWriterResult->getDetailId(), $this->cleanedOptionRelation)) {
+            $sql = 'DELETE FROM s_article_configurator_option_relations WHERE article_id = ?';
+            $this->db->executeQuery($sql, [$articleWriterResult->getDetailId()]);
+            $this->cleanedOptionRelation[] = $articleWriterResult->getDetailId();
+        }
+
+        foreach ($configuratorData as $configurator) {
+            if (!$this->isValid($configurator)) {
+                continue;
+            }
+            $configurator = $this->configuratorValidator->filterEmptyString($configurator);
+            $this->configuratorValidator->validate($configurator, ConfiguratorValidator::$mapper);
 
             /**
              * configurator option
@@ -505,5 +558,10 @@ class ConfiguratorWriter
         }
 
         return $configuratorSetId;
+    }
+
+    private function resetSetGroupAndOptionRelations($setId){
+        $this->db->executeQuery("DELETE FROM s_article_configurator_set_group_relations where set_id = ?", array($setId));
+        $this->db->executeQuery("DELETE FROM s_article_configurator_set_option_relations where set_id = ?", array($setId));
     }
 }
