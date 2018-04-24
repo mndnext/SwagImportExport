@@ -102,7 +102,8 @@ class Profile
                     $this->getDefaultFields($leaf);
                 }
 
-                if (isset($leaf['defaultValue']) && $leaf['defaultValue'] != '') {
+                // PATCH needed to overwrite with empty string
+                if (isset($leaf['defaultValue'])) { // && $leaf['defaultValue'] != '') {
                     $this->defaultValues[$leaf['shopwareField']] = $leaf['defaultValue'];
                 }
             }

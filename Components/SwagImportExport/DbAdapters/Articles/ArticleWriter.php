@@ -72,7 +72,8 @@ class ArticleWriter
      */
     public function write($article, $defaultValues)
     {
-        $article = $this->validator->filterEmptyString($article);
+        // PATCH needed to overwrite with empty string
+        //$article = $this->validator->filterEmptyString($article);
         $this->validator->checkRequiredFields($article);
 
         return $this->insertOrUpdateArticle($article, $defaultValues);

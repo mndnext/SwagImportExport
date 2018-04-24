@@ -8,10 +8,12 @@
     "link": "http://store.shopware.com",
     "author": "Shopware AG",
 
-    "currentVersion": "2.1.0",
+    "currentVersion": "2.1.0.2-mnd",
 
     "changelog": {
         "de": {
+            "2.1.0.2-mnd": "Felder, welche in Quelldatei leer sind auch in Shop leeren.",
+            "2.1.0.1-mnd": "Varianten-Konfigurationen in Shop vollständig durch Daten aus Quelldatei ersetzen.",
             "2.1.0": "PT-7644, SW-18399, SW-18916 - Shopware 5.3 Kompatibilität;",
             "2.0.2": "PT-6830 - Feature: Kundenadressen Standardprofil; PT-7063 - Bugfix: Beschreibungen für Standardprofile; PT-7095 - Bugfix: Artikelpreis-Import über CLI verbessert; PT-7151 - Bugfix: Import von Artikeln mit Staffelpreisen; PT-7189 - Bugfix: Sortierung der Protokolle anhand des Erstelldatums; PT-7190 - Bugfix: Sortieren und Filtern für Profile verbessert; PT-7192 - Bugfix: Verbesserung der Fehlermeldungen bei erweiterten Datensätzen; PT-7198 - Bugfix: Arbeitsablauf Anlegen und Anpassen von Profilen verbessert; PT-7234 - Bugfix: Zuweisung von Newsletter-Empfänger zu Gruppen; PT-7254 - Bugfix: Update Probleme; PT-7286 - Bugfix: Fehler beim Erstellen von Spalten; PT-7272 - Bugfix: Artikelpreis Import für Einkaufspreis; PT-7281 - Feature: Standardprofil für Bestellungen; PT-7293 - Bugfix: Kein Import-Error für leere Artikeleigenschaften;",
             "2.0.1": "PT-7236 - Doppelt vergebene Profil-Namen bekommen einen individuellen Suffix",
