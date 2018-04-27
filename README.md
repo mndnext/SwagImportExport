@@ -1,4 +1,9 @@
 # SwagImportExport
+
+> ## Patched Version from MND Next
+> * fully updates option relations of articles from source file. (versus only adding options and not removing them)
+> * contains patch that empties attribute fields that are empty in source file. (versus leaving them unchanged)
+
 ## Description
 Importing and exporting product and customer data, categories as well as product images is a standard task of any shop owner. Keeping that in mind, Shopware wants to make it as easy as possible for you to quickly edit inventory, prices or even perform a customized import. 
  
